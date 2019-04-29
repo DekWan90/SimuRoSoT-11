@@ -1,0 +1,16 @@
+﻿Build started 28/7/2015 11:19:09 AM.
+     1>Project "F:\Large_League_SimuroSot_Program\simu 11 vs 11\11v11Client\MicroClient.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Touching ".\Debug\MicroClient.unsuccessfulbuild".
+       ClCompile:
+         All outputs are up-to-date.
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _VC80_UPGRADE=0x0600 /D _MBCS /D _AFXDLL /Gm /EHsc /RTC1 /MDd /GS /Gy- /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp".\Debug\MicroClient.pch" /Fo".\Debug\\" /Fd".\Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt BaseAgent.cpp
+         BaseAgent.cpp
+     1>f:\large_league_simurosot_program\simu 11 vs 11\11v11client\baseagent.cpp(1): warning C4627: '#include "OS.h"': skipped when looking for precompiled header use
+                 Add directive to 'stdafx.h' or rebuild precompiled header
+     1>f:\large_league_simurosot_program\simu 11 vs 11\11v11client\baseagent.cpp(4): fatal error C1083: Cannot open include file: 'iostream.h': No such file or directory
+     1>Done Building Project "F:\Large_League_SimuroSot_Program\simu 11 vs 11\11v11Client\MicroClient.vcxproj" (build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.12
