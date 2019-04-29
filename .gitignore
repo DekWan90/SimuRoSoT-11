@@ -1,4 +1,4 @@
-# Prerequisites
+﻿# Prerequisites
 *.d
 
 # Compiled Object files
@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+ipch
+
+_UpgradeReport_Files
+
+UpgradeLog.XML
+
+Release
+
+Debug
