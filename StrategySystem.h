@@ -22,6 +22,27 @@ private:
 	void Velocity(int which, int vL, int vR);
 	void Angle(int which, int desired_angle);
 	void Goalie(int which);
+	void DefenderY7(int which);
+	void DefenderY8(int which);
+	void DefenderY9(int which);
+	void DefenderY10(int which);
+	void AttackerY1(int which);
+	void AttackerY2(int which);
+	void AttackerY3(int which);
+	void AttackerY4(int which);
+	void AttackerY5(int which);
+	void AttackerY6(int which);
+	void DefenderB7(int which);
+	void DefenderB8(int which);
+	void DefenderB9(int which);
+	void DefenderB10(int which);
+	void AttackerB1(int which);
+	void AttackerB2(int which);
+	void AttackerB3(int which);
+	void AttackerB4(int which);
+	void AttackerB5(int which);
+	void AttackerB6(int which);
+
 	CRect       boundRect;     
 	int m_nStrategy;
 	int         m_OurTeam;  

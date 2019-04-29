@@ -1,7 +1,7 @@
-#include "OS.h"
+//#include "OS.h"
 #include "stdafx.h"
 #include "Agentsock.h"
-#include <iostream.h>
+//#include <iostream.h>
 #include "MicroClientDoc.h"
 #include "TParseString.h"
 #include "StrategySystem.h"

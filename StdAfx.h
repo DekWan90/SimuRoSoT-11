@@ -26,8 +26,8 @@
 #define LEFT_TO_RIGHT	0
 #define RIGHT_TO_LEFT	1
 #define MAX_PLAYER 3
-#define OWN_TEAM 0
-#define OTHER_TEAM 1
+#define OWN_TEAM 1
+#define OTHER_TEAM 0
 
 typedef struct {
 	short	enable ;

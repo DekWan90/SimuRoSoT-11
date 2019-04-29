@@ -4,10 +4,10 @@
 IMPLEMENT_DYNAMIC(CStrategySystem, CObject)
 
 extern int nKick;
-#define  BALL_WIDTH		78//30
-#define  BALL_LENGTH1	56//60
-#define  BALL_DIS	    26//10 
-#define  CORNER         115//45
+#define  BALL_WIDTH		78
+#define  BALL_LENGTH	156 
+#define  BALL_DIS	    26 
+#define  CORNER         115
 
 CStrategySystem::CStrategySystem(int id)
 {
@@ -75,25 +75,56 @@ void CStrategySystem::Action()
 void CStrategySystem::Think()
 {
 
-	NormalGame5();
-
+	switch(m_nStrategy)
+	{
+	case 0:
+		NormalGame();
+		break;
+	case 1:
+		NormalGame5();
+		break;
+	case 2:
+		NormalGame3();
+		break;
+	case 3:
+		NormalGame4();
+		break;
+	case 4:
+		NormalGame5();
+		break;
+	}
 }
 
 
 void CStrategySystem::NormalGame()
 {
 	
-	Position(HOME1,CPoint(ball.position.x,ball.position.y));
-	Position(HOME2,CPoint(ball.position.x,ball.position.y));
-	Velocity(HOME3,20,-10);
-	Velocity(HOME4,20,-10);
-	Velocity(HOME5,20,-10);
-	Velocity(HOME6,-20,10);
-	Velocity(HOME7,-20,10);
-	Velocity(HOME8,-20,10);
-	Velocity(HOME9,-20,10);
-	Velocity(HOME10,-20,10);
-	Goalie(HGOALIE);
+		CPoint target;
+		AttackerY1(HOME1);
+		AttackerY2(HOME2);
+		AttackerY3(HOME3);
+		AttackerY4(HOME4);
+		AttackerY5(HOME5);
+		AttackerY6(HOME6);
+	
+		{
+			if (ball.position.x > boundRect.right +1)
+			{
+
+				Position(HOME7, CPoint(ball.position.x, ball.position.y));
+				Position(HOME8, CPoint(ball.position.x, ball.position.y));
+				Position(HOME9, CPoint(ball.position.x, ball.position.y));
+				Position(HOME10, CPoint(ball.position.x, ball.position.y));
+			}
+			else
+			{
+				DefenderY7(HOME7);
+				DefenderY8(HOME8);
+				DefenderY9(HOME9);
+				DefenderY10(HOME10);
+			}
+		}
+		Goalie(HGOALIE);
 
 }
 
@@ -114,15 +145,38 @@ void CStrategySystem::NormalGame3()
 
 void CStrategySystem::NormalGame4()
 {
-	
+
 }
 
 void CStrategySystem::NormalGame5()
 {
+		
+	
+	if(ball.position.x>boundRect.left+ 800)
 
-	int i;
-	i = C_CheckBallPos();
-	Position(HOME1, ball.position);
+	{
+		AttackerB1(HOME1);
+		AttackerB2(HOME2);
+		AttackerB3(HOME3);
+		AttackerB4(HOME4);
+		AttackerB5(HOME5);
+		AttackerB6(HOME6);
+	}
+	else
+	{
+	Position(HOME1,CPoint(ball.position.x,ball.position.y));
+	Position(HOME2,CPoint(ball.position.x,ball.position.y));
+	Position(HOME3,CPoint(ball.position.x,ball.position.y));
+	Position(HOME4,CPoint(ball.position.x,ball.position.y));
+	Position(HOME5,CPoint(ball.position.x,ball.position.y));
+	Position(HOME6,CPoint(ball.position.x,ball.position.y));
+	}
+	
+	DefenderB7(HOME7);
+	DefenderB8(HOME8);
+	DefenderB9(HOME9);
+	DefenderB10(HOME10);
+	Goalie(HGOALIE);
 
 
 }
@@ -168,30 +222,28 @@ void CStrategySystem::Angle(int which, int desired_angle)
 		robot = &hgoalie;
 		break;
 	}
-	//calculate target sudut dgn robot
+
 	theta_e = desired_angle - robot->angle;
 	while(theta_e > 180)
 		theta_e -= 360;
 	while(theta_e < -180)
 		theta_e += 360;                                      
-	// if lebih dari 90 atau -90, change direction
 	if(theta_e < -90)  
 		theta_e += 180; 
 	else if(theta_e > 90)  
-		theta_e -= 180;
-	// calculated ration
-	vL = (int)(60.0/90.0*theta_e);  
-	vR = (int)(-60.0/90.0*theta_e);
+		theta_e -= 180;		
+	vL = (int)(90.0/90.0*theta_e);  
+	vR = (int)(-90.0/90.0*theta_e);
 	Velocity(which, vL, vR);
 }
 
 void CStrategySystem::Velocity(int which, int vL, int vR)
 {
-	if(vL < -127)	vL = -127;
-	if(vL > 127)	vL = 127;
+	if (vL < -127)	vL = -127;
+	if (vL > 127)	vL = 127;
 
-	if(vR < -127)	vR = -127;
-	if(vR > 127)	vR = 127;
+	if (vR < -127)	vR = -127;
+	if (vR > 127)	vR = 127;
 
 	switch(which){
 	case HOME1:
@@ -329,7 +381,7 @@ void CStrategySystem::Position(int which, CPoint point)
 
 #define ANGLE_BOUND 60
 #define BOUND_BOUND 12
-#define G_OFFSET		20//15
+#define G_OFFSET		20
 #define G_ANGLE_BOUND	60
 #define G_BOUND_BOUND	10
 
@@ -519,8 +571,7 @@ void CStrategySystem::Goalie(int which)
 {
 	Robot2 *robot;
 	CPoint target; 
-	int estimate_x, estimate_y.angle;
-	int height, center;
+	int dx, dy;
 	
 	switch(which){
 	case HOME1:	
@@ -535,6 +586,26 @@ void CStrategySystem::Goalie(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -542,6 +613,1327 @@ void CStrategySystem::Goalie(int which)
 
 	target.y = ball.position.y;
 	target.x = boundRect.right - 10;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+void CStrategySystem::DefenderY7(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y+10;
+	target.x = boundRect.right - 45;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+void CStrategySystem::DefenderY8(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y-10;
+	target.x = boundRect.right - 45;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+void CStrategySystem::DefenderY9(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y+10;
+	target.x = boundRect.right - 95;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+void CStrategySystem::DefenderY10(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y-10;
+	target.x = boundRect.right - 95;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+
+void CStrategySystem::AttackerY1(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y;
+	//target.x = boundRect.right - 100;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+void CStrategySystem::AttackerY2(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y;
+	target.x = boundRect.right - 100;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+void CStrategySystem::AttackerY3(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y;
+	//target.x = boundRect.right - 100;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+void CStrategySystem::AttackerY4(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y;
+	//target.x = boundRect.right - 100;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+void CStrategySystem::AttackerY5(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y;
+	target.x = boundRect.right - 100;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+void CStrategySystem::AttackerY6(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y;
+	target.x = boundRect.right - 100;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+void CStrategySystem::DefenderB7(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y+10;
+	target.x = boundRect.left +800;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+void CStrategySystem::DefenderB8(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y-10;
+	target.x = boundRect.left + 800;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+void CStrategySystem::DefenderB9(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y-10;
+	target.x = boundRect.left + 847;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+void CStrategySystem::DefenderB10(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y+10;
+	target.x = boundRect.left + 847;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+
+void CStrategySystem::AttackerB1(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y;
+	//target.x = boundRect.right - 100;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+void CStrategySystem::AttackerB2(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y;
+	//target.x = boundRect.right - 100;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+void CStrategySystem::AttackerB3(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y;
+	//target.x = boundRect.right - 100;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+void CStrategySystem::AttackerB4(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y;
+	//target.x = boundRect.right - 100;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+void CStrategySystem::AttackerB5(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y;
+	//target.x = boundRect.right - 100;
+
+
+	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.top + (boundRect.bottom-boundRect.top)/3;
+	}
+	else if(target.y > boundRect.bottom - (boundRect.bottom-boundRect.top)/3)
+	{
+		target.y = boundRect.bottom - (boundRect.bottom-boundRect.top)/3;
+	}
+
+	dx = robot->position.x - target.x ;
+	dy = robot->position.y - target.y; 
+
+	if(dx*dx+dy*dy > 10)  
+		Position(which, CPoint(target.x,target.y));
+	else 
+		Angle(which, 90);
+}
+
+void CStrategySystem::AttackerB6(int which)
+{
+	Robot2 *robot;
+	CPoint target; 
+	int dx, dy;
+	
+	switch(which){
+	case HOME1:	
+		robot = &home1;
+		break;
+	case HOME2:            
+		robot = &home2;
+		break;
+	case HOME3:	
+		robot = &home3;
+		break;
+	case HOME4:	
+		robot = &home4;
+		break;
+	
+	case HOME5:	
+		robot = &home5;
+		break;
+	case HOME6:	
+		robot = &home6;
+		break;
+	case HOME7:	
+		robot = &home7;
+		break;
+	case HOME8:	
+		robot = &home8;
+		break;
+	case HOME9:	
+		robot = &home9;
+		break;
+	case HOME10:	
+		robot = &home10;
+		break;
+	
+	case HGOALIE:      
+		robot = &hgoalie;
+		break;
+	}
+
+	target.y = ball.position.y;
+	//target.x = boundRect.right - 100;
+
 
 	if(target.y < boundRect.top + (boundRect.bottom-boundRect.top)/3)
 	{
