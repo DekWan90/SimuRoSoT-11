@@ -3,7 +3,7 @@
 
 IMPLEMENT_DYNAMIC(CStrategySystem, CObject)
 
-extern int nKick;
+	extern int nKick;
 #define  BALL_WIDTH		78
 #define  BALL_LENGTH	156 
 #define  BALL_DIS	    26 
@@ -98,34 +98,32 @@ void CStrategySystem::Think()
 
 void CStrategySystem::NormalGame()
 {
-	
-		CPoint target;
-		AttackerY1(HOME1);
-		AttackerY2(HOME2);
-		AttackerY3(HOME3);
-		AttackerY4(HOME4);
-		AttackerY5(HOME5);
-		AttackerY6(HOME6);
-	
-		{
-			if (ball.position.x > boundRect.right +1)
-			{
 
-				Position(HOME7, CPoint(ball.position.x, ball.position.y));
-				Position(HOME8, CPoint(ball.position.x, ball.position.y));
-				Position(HOME9, CPoint(ball.position.x, ball.position.y));
-				Position(HOME10, CPoint(ball.position.x, ball.position.y));
-			}
-			else
-			{
-				DefenderY7(HOME7);
-				DefenderY8(HOME8);
-				DefenderY9(HOME9);
-				DefenderY10(HOME10);
-			}
-		}
-		Goalie(HGOALIE);
+	CPoint target;
+	AttackerY1(HOME1);
+	AttackerY2(HOME2);
+	AttackerY3(HOME3);
+	AttackerY4(HOME4);
+	AttackerY5(HOME5);
+	AttackerY6(HOME6);
 
+	if (ball.position.x > boundRect.right +1)
+	{
+
+		Position(HOME7, CPoint(ball.position.x, ball.position.y));
+		Position(HOME8, CPoint(ball.position.x, ball.position.y));
+		Position(HOME9, CPoint(ball.position.x, ball.position.y));
+		Position(HOME10, CPoint(ball.position.x, ball.position.y));
+	}
+	else
+	{
+		DefenderY7(HOME7);
+		DefenderY8(HOME8);
+		DefenderY9(HOME9);
+		DefenderY10(HOME10);
+	}
+
+	Goalie(HGOALIE);
 }
 
 void CStrategySystem::NormalGame1()
@@ -150,8 +148,8 @@ void CStrategySystem::NormalGame4()
 
 void CStrategySystem::NormalGame5()
 {
-		
-	
+
+
 	if(ball.position.x>boundRect.left+ 800)
 
 	{
@@ -164,14 +162,14 @@ void CStrategySystem::NormalGame5()
 	}
 	else
 	{
-	Position(HOME1,CPoint(ball.position.x,ball.position.y));
-	Position(HOME2,CPoint(ball.position.x,ball.position.y));
-	Position(HOME3,CPoint(ball.position.x,ball.position.y));
-	Position(HOME4,CPoint(ball.position.x,ball.position.y));
-	Position(HOME5,CPoint(ball.position.x,ball.position.y));
-	Position(HOME6,CPoint(ball.position.x,ball.position.y));
+		Position(HOME1,CPoint(ball.position.x,ball.position.y));
+		Position(HOME2,CPoint(ball.position.x,ball.position.y));
+		Position(HOME3,CPoint(ball.position.x,ball.position.y));
+		Position(HOME4,CPoint(ball.position.x,ball.position.y));
+		Position(HOME5,CPoint(ball.position.x,ball.position.y));
+		Position(HOME6,CPoint(ball.position.x,ball.position.y));
 	}
-	
+
 	DefenderB7(HOME7);
 	DefenderB8(HOME8);
 	DefenderB9(HOME9);
@@ -186,7 +184,7 @@ void CStrategySystem::Angle(int which, int desired_angle)
 {
 	Robot2 *robot;
 	int theta_e, vL, vR; 
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -310,7 +308,7 @@ void CStrategySystem::Position(int which, CPoint point)
 	Robot2 *robot;    
 	double distance_e;                 
 	int dx, dy, desired_angle, theta_e, vL, vR;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -346,17 +344,17 @@ void CStrategySystem::Position(int which, CPoint point)
 		robot = &hgoalie;
 		break;
 	}
-        
+
 	dx = point.x - robot->position.x;
 	dy = point.y - robot->position.y;
-	                                            
+
 	distance_e = sqrt(1.0*dx*dx+1.0*dy*dy);	                                            
 
-    if(dx == 0 && dy == 0)
+	if(dx == 0 && dy == 0)
 		desired_angle = 90;
 	else
 		desired_angle = (int)(180.0/M_PI*atan2((double)(dy), (double)(dx)));
-	
+
 	theta_e = desired_angle - robot->angle;
 
 	while(theta_e > 180)
@@ -387,21 +385,21 @@ void CStrategySystem::Position(int which, CPoint point)
 
 
 void CStrategySystem::ReceiveData(Robot1 bal,Robot2 ho1,Robot2 ho2,Robot2 ho3,Robot2 ho4,
-		             Robot2 ho5,Robot2 ho6,Robot2 ho7,Robot2 ho8,Robot2 ho9,
-					 Robot2 ho10,Robot2 hgo,Robot3 opp)
+	Robot2 ho5,Robot2 ho6,Robot2 ho7,Robot2 ho8,Robot2 ho9,
+	Robot2 ho10,Robot2 hgo,Robot3 opp)
 {
 	if(m_nGameArea==GAME_RIGHT)
 	{
 		ball.position=bal.position;   
 		//추가
 		//ball.oldPosition=bal.oldPosition;
-		
+
 		home1.position=ho1.position;      
 		home1.angle=ho1.angle;
-		
+
 		home2.position=ho2.position;       
 		home2.angle=ho2.angle;
-		
+
 		home3.position=ho3.position;
 		home3.angle=ho3.angle;
 
@@ -428,7 +426,7 @@ void CStrategySystem::ReceiveData(Robot1 bal,Robot2 ho1,Robot2 ho2,Robot2 ho3,Ro
 
 		hgoalie.position=hgo.position;    
 		hgoalie.angle=hgo.angle;
-		
+
 		opponent.position1=opp.position1;   
 		opponent.position2=opp.position2;
 		opponent.position3=opp.position3;
@@ -440,14 +438,14 @@ void CStrategySystem::ReceiveData(Robot1 bal,Robot2 ho1,Robot2 ho2,Robot2 ho3,Ro
 		opponent.position9=opp.position9;
 		opponent.position10=opp.position10;
 		opponent.position11=opp.position11;
-	
+
 	}
 	else  
 	{
-		
+
 		ball.position.x=1030-bal.position.x;
 		ball.position.y=818-bal.position.y;
-	
+
 		//추가
 
 		//ball.oldPosition.x = 1270-bal.oldPosition.x;
@@ -555,7 +553,7 @@ void CStrategySystem::ReceiveData(Robot1 bal,Robot2 ho1,Robot2 ho2,Robot2 ho3,Ro
 		opponent.position9.y=818-opp.position9.y;
 		opponent.position10.y=818-opp.position10.y;
 		opponent.position11.y=818-opp.position11.y;
-	
+
 	}
 }
 
@@ -572,7 +570,7 @@ void CStrategySystem::Goalie(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -586,7 +584,7 @@ void CStrategySystem::Goalie(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -605,7 +603,7 @@ void CStrategySystem::Goalie(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -638,7 +636,7 @@ void CStrategySystem::DefenderY7(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -652,7 +650,7 @@ void CStrategySystem::DefenderY7(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -671,7 +669,7 @@ void CStrategySystem::DefenderY7(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -704,7 +702,7 @@ void CStrategySystem::DefenderY8(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -718,7 +716,7 @@ void CStrategySystem::DefenderY8(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -737,7 +735,7 @@ void CStrategySystem::DefenderY8(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -770,7 +768,7 @@ void CStrategySystem::DefenderY9(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -784,7 +782,7 @@ void CStrategySystem::DefenderY9(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -803,7 +801,7 @@ void CStrategySystem::DefenderY9(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -836,7 +834,7 @@ void CStrategySystem::DefenderY10(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -850,7 +848,7 @@ void CStrategySystem::DefenderY10(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -869,7 +867,7 @@ void CStrategySystem::DefenderY10(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -903,7 +901,7 @@ void CStrategySystem::AttackerY1(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -917,7 +915,7 @@ void CStrategySystem::AttackerY1(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -936,7 +934,7 @@ void CStrategySystem::AttackerY1(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -969,7 +967,7 @@ void CStrategySystem::AttackerY2(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -983,7 +981,7 @@ void CStrategySystem::AttackerY2(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -1002,7 +1000,7 @@ void CStrategySystem::AttackerY2(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -1035,7 +1033,7 @@ void CStrategySystem::AttackerY3(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -1049,7 +1047,7 @@ void CStrategySystem::AttackerY3(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -1068,7 +1066,7 @@ void CStrategySystem::AttackerY3(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -1101,7 +1099,7 @@ void CStrategySystem::AttackerY4(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -1115,7 +1113,7 @@ void CStrategySystem::AttackerY4(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -1134,7 +1132,7 @@ void CStrategySystem::AttackerY4(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -1167,7 +1165,7 @@ void CStrategySystem::AttackerY5(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -1181,7 +1179,7 @@ void CStrategySystem::AttackerY5(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -1200,7 +1198,7 @@ void CStrategySystem::AttackerY5(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -1233,7 +1231,7 @@ void CStrategySystem::AttackerY6(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -1247,7 +1245,7 @@ void CStrategySystem::AttackerY6(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -1266,7 +1264,7 @@ void CStrategySystem::AttackerY6(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -1299,7 +1297,7 @@ void CStrategySystem::DefenderB7(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -1313,7 +1311,7 @@ void CStrategySystem::DefenderB7(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -1332,7 +1330,7 @@ void CStrategySystem::DefenderB7(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -1365,7 +1363,7 @@ void CStrategySystem::DefenderB8(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -1379,7 +1377,7 @@ void CStrategySystem::DefenderB8(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -1398,7 +1396,7 @@ void CStrategySystem::DefenderB8(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -1430,7 +1428,7 @@ void CStrategySystem::DefenderB9(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -1444,7 +1442,7 @@ void CStrategySystem::DefenderB9(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -1463,7 +1461,7 @@ void CStrategySystem::DefenderB9(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -1495,7 +1493,7 @@ void CStrategySystem::DefenderB10(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -1509,7 +1507,7 @@ void CStrategySystem::DefenderB10(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -1528,7 +1526,7 @@ void CStrategySystem::DefenderB10(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -1562,7 +1560,7 @@ void CStrategySystem::AttackerB1(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -1576,7 +1574,7 @@ void CStrategySystem::AttackerB1(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -1595,7 +1593,7 @@ void CStrategySystem::AttackerB1(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -1628,7 +1626,7 @@ void CStrategySystem::AttackerB2(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -1642,7 +1640,7 @@ void CStrategySystem::AttackerB2(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -1661,7 +1659,7 @@ void CStrategySystem::AttackerB2(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -1694,7 +1692,7 @@ void CStrategySystem::AttackerB3(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -1708,7 +1706,7 @@ void CStrategySystem::AttackerB3(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -1727,7 +1725,7 @@ void CStrategySystem::AttackerB3(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -1760,7 +1758,7 @@ void CStrategySystem::AttackerB4(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -1774,7 +1772,7 @@ void CStrategySystem::AttackerB4(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -1793,7 +1791,7 @@ void CStrategySystem::AttackerB4(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -1826,7 +1824,7 @@ void CStrategySystem::AttackerB5(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -1840,7 +1838,7 @@ void CStrategySystem::AttackerB5(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -1859,7 +1857,7 @@ void CStrategySystem::AttackerB5(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
@@ -1892,7 +1890,7 @@ void CStrategySystem::AttackerB6(int which)
 	Robot2 *robot;
 	CPoint target; 
 	int dx, dy;
-	
+
 	switch(which){
 	case HOME1:	
 		robot = &home1;
@@ -1906,7 +1904,7 @@ void CStrategySystem::AttackerB6(int which)
 	case HOME4:	
 		robot = &home4;
 		break;
-	
+
 	case HOME5:	
 		robot = &home5;
 		break;
@@ -1925,7 +1923,7 @@ void CStrategySystem::AttackerB6(int which)
 	case HOME10:	
 		robot = &home10;
 		break;
-	
+
 	case HGOALIE:      
 		robot = &hgoalie;
 		break;
